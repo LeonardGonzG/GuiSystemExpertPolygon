@@ -1,21 +1,79 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package SystemExpert;
+
+import SystemExpert.base.fact.IFact;
+import SystemExpert.base.rule.Rule;
+import SystemExpert.system.HumanInterface;
+import SystemExpert.system.Motor;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.List;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
  * @author leogonz.gut
  */
-public class UserSystemPolygon extends javax.swing.JFrame {
+public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterface {
 
-    /**
-     * Creates new form UserSystemPolygon
-     */
+    Motor motor;
+
     public UserSystemPolygon() {
         initComponents();
+        this.setLocationRelativeTo(null);
+
+        // Creación del motor
+        this.motor = new Motor(this);
+    }
+
+    protected void loadDataMotro(String lineDataFile) {
+
+        this.motor.addRule(lineDataFile);
+
+    }
+
+    protected String cargarNombreArchivo() {
+
+        String ruta=null;
+        
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+
+        FileNameExtensionFilter imgFilter = new FileNameExtensionFilter("jpg", "gif", "txt");
+        fileChooser.setFileFilter(imgFilter);
+
+        int result = fileChooser.showOpenDialog(this);
+
+        if (result != JFileChooser.CANCEL_OPTION) {
+
+            File fileName = fileChooser.getSelectedFile();
+
+            if ((fileName == null) || (fileName.getName().equals(""))) {
+                this.fileName.setText("...");
+            } else {
+                this.fileName.setText(fileName.getAbsolutePath());
+                ruta = fileName.getAbsolutePath().trim();
+            }
+        }
+        
+        return ruta;
+    }
+    
+    protected void muestraContenido(String archivo) throws FileNotFoundException, IOException {
+        String cadena;
+        FileReader f = new FileReader(archivo);
+        BufferedReader b = new BufferedReader(f);
+        while((cadena = b.readLine())!=null) {
+            
+            //Alimentar motor de inferencia
+            System.out.println(cadena);
+        }
+        b.close();
     }
 
     /**
@@ -27,21 +85,220 @@ public class UserSystemPolygon extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jPanel3 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        fileName = new javax.swing.JTextField();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jLabel3 = new javax.swing.JLabel();
+        jToggleButton1 = new javax.swing.JToggleButton();
+        jToggleButton2 = new javax.swing.JToggleButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("GUI Sistema Experto");
+        setPreferredSize(new java.awt.Dimension(750, 630));
+        setResizable(false);
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setPreferredSize(new java.awt.Dimension(650, 560));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel2.setBackground(new java.awt.Color(51, 204, 255));
+
+        jLabel1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Sistema experto - poligonos");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, 50));
+
+        jSeparator1.setForeground(new java.awt.Color(0, 153, 255));
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 60, 100, 490));
+
+        jPanel3.setBackground(new java.awt.Color(204, 255, 255));
+
+        jButton1.setText("Cargar archivo");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 102, 102));
+        jLabel2.setText("Motor de inferencia");
+
+        fileName.setEditable(false);
+        fileName.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(fileName))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(jLabel2)
+                        .addGap(0, 99, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(fileName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
+        );
+
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 250, -1));
+
+        jPanel4.setBackground(new java.awt.Color(204, 255, 255));
+
+        jLabel4.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 102, 102));
+        jLabel4.setText("Informe de motor");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 250, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel4Layout.createSequentialGroup()
+                    .addGap(30, 30, 30)
+                    .addComponent(jLabel4)
+                    .addContainerGap(115, Short.MAX_VALUE)))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 360, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel4Layout.createSequentialGroup()
+                    .addGap(21, 21, 21)
+                    .addComponent(jLabel4)
+                    .addContainerGap(322, Short.MAX_VALUE)))
+        );
+
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 250, 360));
+
+        jScrollPane1.setBackground(new java.awt.Color(204, 255, 255));
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        jTable1.setBackground(new java.awt.Color(204, 255, 255));
+        jTable1.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"Triangulo", null},
+                {"", null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Tipo de poligonos", "Imagen"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Object.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jTable1.setGridColor(new java.awt.Color(0, 51, 51));
+        jTable1.setSelectionBackground(new java.awt.Color(0, 204, 204));
+        jTable1.setSelectionForeground(new java.awt.Color(0, 51, 51));
+        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+        }
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 100, 430, 440));
+
+        jLabel3.setFont(new java.awt.Font("Calibri", 1, 16)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 102, 102));
+        jLabel3.setText("Respuestas encontradas");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 70, 350, -1));
+
+        jToggleButton1.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jToggleButton1.setForeground(new java.awt.Color(0, 102, 102));
+        jToggleButton1.setText("Reiniciar");
+        jPanel1.add(jToggleButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 550, 90, 30));
+
+        jToggleButton2.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jToggleButton2.setForeground(new java.awt.Color(0, 102, 102));
+        jToggleButton2.setText("Cerrar");
+        jPanel1.add(jToggleButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 550, 90, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 709, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 432, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+      
+        String rutaArchivo = cargarNombreArchivo();
+        
+        if(rutaArchivo!=null){
+        
+            try {
+                muestraContenido(rutaArchivo);
+            } catch (IOException ex) {
+                System.out.println("Error en la carga del archivo");
+                      
+            }
+        }else{
+            System.out.println("No existe la ruta");
+        }
+        
+        
+    }//GEN-LAST:event_jButton1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -78,6 +335,55 @@ public class UserSystemPolygon extends javax.swing.JFrame {
         });
     }
 
+    @Override
+    public int askIntValue(String question) {
+        int edad = 0;
+
+        try {
+            edad = Integer.parseInt(JOptionPane.showInputDialog(question));
+        } catch (NumberFormatException e) {
+            return edad;
+        }
+
+        return edad;
+    }
+
+    @Override
+    public boolean askBoolValue(String question) {
+        String resp;
+        try {
+            resp = JOptionPane.showInputDialog(question + " (si, no)");
+            return (resp.equals("si"));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public void printFacts(List<IFact> paramList) {
+
+    }
+
+    @Override
+    public void printRules(List<Rule> paramList) {
+
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField fileName;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JToggleButton jToggleButton2;
     // End of variables declaration//GEN-END:variables
 }
