@@ -4,17 +4,22 @@ import SystemExpert.base.fact.IFact;
 import SystemExpert.base.rule.Rule;
 import SystemExpert.system.HumanInterface;
 import SystemExpert.system.Motor;
+import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -24,6 +29,7 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
 
     Motor motor;
     DefaultTableModel modelo;
+    Hashtable contenedor = new Hashtable();
 
     public UserSystemPolygon() {
         initComponents();
@@ -32,12 +38,24 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
         modelo = (DefaultTableModel) respTable.getModel();
 
         int filas = modelo.getRowCount();
-
         for (int i = 0; filas > i; i++) {
             modelo.removeRow(0);
         }
         // Creación del motor
         this.motor = new Motor(this);
+
+        contenedor.put("Cuadrado", "001");
+        contenedor.put("Cuadrilátero", "002");
+        contenedor.put("Paralelograma", "003");
+        contenedor.put("Rectángulo", "004");
+        contenedor.put("Rombo", "005");
+        contenedor.put("Trapecio", "006");
+        contenedor.put("Triángulo Equilátero", "007");
+        contenedor.put("Triángulo Isósceles", "008");
+        contenedor.put("Triángulo Rectángulo Isósceles", "009");
+        contenedor.put("Triángulo Rectángulo", "010");
+        contenedor.put("Triángulo", "011");
+
     }
 
     protected void loadDataMotro(String lineDataFile) {
@@ -256,31 +274,35 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
         respTable.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         respTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Triangulo", null},
-                {"", null},
-                {null, null},
-                {null, null}
+                {null},
+                {null},
+                {null},
+                {null}
             },
             new String [] {
-                "Tipo de poligonos", "Imagen"
+                "Tipo de poligonos"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class
+            boolean[] canEdit = new boolean [] {
+                false
             };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         respTable.setGridColor(new java.awt.Color(0, 51, 51));
         respTable.setSelectionBackground(new java.awt.Color(0, 204, 204));
         respTable.setSelectionForeground(new java.awt.Color(0, 51, 51));
         respTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        respTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                respTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(respTable);
         if (respTable.getColumnModel().getColumnCount() > 0) {
             respTable.getColumnModel().getColumn(0).setResizable(false);
-            respTable.getColumnModel().getColumn(1).setResizable(false);
         }
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 140, 430, 400));
@@ -357,17 +379,53 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
         for (int i = 0; filas > i; i++) {
             modelo.removeRow(0);
         }
-        
+
         this.numresp.setText("¿?");
 
-    //Poner en funcionamiento el motor
+        //Poner en funcionamiento el motor
         motor.solve();
     }//GEN-LAST:event_jButton3MouseClicked
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
-       this.setVisible(false);
-       this.dispose();
+        this.setVisible(false);
+        this.dispose();
     }//GEN-LAST:event_jButton4MouseClicked
+
+    
+    ShowImage seeImg = new ShowImage();
+    private void respTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_respTableMouseClicked
+
+        
+        int index = respTable.getSelectedRow();
+        TableModel model = respTable.getModel();
+        String data = model.getValueAt(index, 0).toString();
+       
+        seeImg.setVisible(true);
+        seeImg.pack();
+        seeImg.setLocationRelativeTo(null);
+        seeImg.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+       
+        String nameImg = "";
+        int cantResp = 0;
+        int indice = 0;
+        String rutaImg = "";
+
+        indice = data.indexOf("(");
+        nameImg = data.substring(0, indice).trim();
+        rutaImg = contenedor.get(nameImg).toString();
+
+        String fullPath = "./ImgGUI/" + rutaImg+".png";
+         seeImg.setTitle(nameImg);
+         
+        ImageIcon imageRow = new ImageIcon(getClass().getResource(fullPath));
+        Image img = imageRow.getImage().getScaledInstance(seeImg.showLabel.getWidth(), seeImg.showLabel.getHeight(),
+                Image.SCALE_SMOOTH);
+
+        seeImg.showLabel.setIcon(new ImageIcon(img)); 
+
+
+    }//GEN-LAST:event_respTableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -439,21 +497,24 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
 
         String data = "";
         int cantResp = 0;
-
+        
         for (IFact f : facts) {
             if (f.getLevel() != 0) {
                 res += f.toString() + "\n";
 
                 data = f.toString();
-                modelo.addRow(new Object[]{data, " "});
+
+                modelo.addRow(new Object[]{data});
                 cantResp++;
             }
         }
 
+        respTable.setModel(modelo);
+        respTable.setRowHeight(50);
+
         numresp.setText("" + cantResp);
 
-       // System.out.println(res);
-
+        // System.out.println(res);
     }
 
     @Override
