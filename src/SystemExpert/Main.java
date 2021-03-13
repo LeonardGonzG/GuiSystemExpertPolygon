@@ -89,6 +89,7 @@ public class Main implements HumanInterface {
         }
 
         System.out.println(res);
+        System.out.println("Estamos en printFacts");
     }
 
     // Muestra las reglas contenidas en la base
@@ -99,5 +100,6 @@ public class Main implements HumanInterface {
             res += r.toString() + "\n";
         }
         System.out.println(res);
+        System.out.println("Estamos en printRules");
     }
 }

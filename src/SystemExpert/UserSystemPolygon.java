@@ -1,4 +1,3 @@
-
 package SystemExpert;
 
 import SystemExpert.base.fact.IFact;
@@ -10,10 +9,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -22,11 +23,19 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterface {
 
     Motor motor;
+    DefaultTableModel modelo;
 
     public UserSystemPolygon() {
         initComponents();
         this.setLocationRelativeTo(null);
 
+        modelo = (DefaultTableModel) respTable.getModel();
+
+        int filas = modelo.getRowCount();
+
+        for (int i = 0; filas > i; i++) {
+            modelo.removeRow(0);
+        }
         // Creación del motor
         this.motor = new Motor(this);
     }
@@ -39,8 +48,8 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
 
     protected String cargarNombreArchivo() {
 
-        String ruta=null;
-        
+        String ruta = null;
+
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
@@ -60,19 +69,42 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
                 ruta = fileName.getAbsolutePath().trim();
             }
         }
-        
+
         return ruta;
     }
-    
+
     protected void muestraContenido(String archivo) throws FileNotFoundException, IOException {
+
         String cadena;
         FileReader f = new FileReader(archivo);
         BufferedReader b = new BufferedReader(f);
-        while((cadena = b.readLine())!=null) {
-            
+
+        //   int linesCount = (int) b.lines().count();
+        int max = 100;
+
+        this.jProgressBar1.setMinimum(0);
+        this.jProgressBar1.setMaximum(max);
+        this.jProgressBar1.setStringPainted(true);
+
+        int cont = 0;
+
+        while ((cadena = b.readLine()) != null) {
+            jProgressBar1.setValue(cont);
+            cont++;
+
             //Alimentar motor de inferencia
-            System.out.println(cadena);
+            // System.out.println(cadena);
+            motor.addRule(cadena.trim());
+
         }
+
+        jProgressBar1.setValue((max - cont) + cont);
+        this.fileUpload.setText("Completado!");
+        this.numreglas.setText("" + cont);
+
+        //Poner en funcionamiento el motor
+        motor.solve();
+
         b.close();
     }
 
@@ -93,17 +125,27 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         fileName = new javax.swing.JTextField();
+        jProgressBar1 = new javax.swing.JProgressBar();
+        fileUpload = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
+        jSeparator2 = new javax.swing.JSeparator();
+        numreglas = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        numresp = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        respTable = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
-        jToggleButton1 = new javax.swing.JToggleButton();
-        jToggleButton2 = new javax.swing.JToggleButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        informe = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("GUI Sistema Experto");
-        setPreferredSize(new java.awt.Dimension(750, 630));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -140,88 +182,79 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
         jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 60, 100, 490));
 
         jPanel3.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jButton1.setFont(new java.awt.Font("Calibri", 0, 11)); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/SystemExpert/ImgGUI/upload.png"))); // NOI18N
         jButton1.setText("Cargar archivo");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton1MouseClicked(evt);
             }
         });
+        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(119, 65, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 102, 102));
         jLabel2.setText("Motor de inferencia");
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 11, -1, -1));
 
         fileName.setEditable(false);
         fileName.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.add(fileName, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 39, 230, -1));
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(fileName))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(jLabel2)
-                        .addGap(0, 99, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(fileName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addContainerGap())
-        );
+        jProgressBar1.setBackground(new java.awt.Color(153, 153, 255));
+        jPanel3.add(jProgressBar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 90, 10));
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 250, -1));
+        fileUpload.setFont(new java.awt.Font("Calibri", 0, 8)); // NOI18N
+        jPanel3.add(fileUpload, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 80, 50, 10));
+
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 250, 100));
 
         jPanel4.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel4.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, -1, -1));
+
+        numreglas.setFont(new java.awt.Font("Calibri", 0, 70)); // NOI18N
+        numreglas.setText("@");
+        jPanel4.add(numreglas, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, 90, 60));
+
+        jLabel5.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 51, 51));
+        jLabel5.setText("Nº de reglas");
+        jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 80, -1, -1));
+
+        jPanel5.setBackground(new java.awt.Color(204, 255, 204));
+        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        numresp.setFont(new java.awt.Font("Calibri", 0, 70)); // NOI18N
+        numresp.setForeground(new java.awt.Color(0, 102, 0));
+        numresp.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        numresp.setText("¿?");
+        jPanel5.add(numresp, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 40, 90, 60));
 
         jLabel4.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel4.setText("Informe de motor");
+        jLabel4.setForeground(new java.awt.Color(0, 51, 51));
+        jLabel4.setText("Nº de posibles respuestas ");
+        jPanel5.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 103, -1, -1));
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 250, Short.MAX_VALUE)
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addGap(30, 30, 30)
-                    .addComponent(jLabel4)
-                    .addContainerGap(115, Short.MAX_VALUE)))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 360, Short.MAX_VALUE)
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addGap(21, 21, 21)
-                    .addComponent(jLabel4)
-                    .addContainerGap(322, Short.MAX_VALUE)))
-        );
+        jLabel6.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(0, 51, 51));
+        jLabel6.setText("encontradas");
+        jPanel5.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 120, -1, -1));
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 250, 360));
+        jPanel4.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 210, 170));
+        jPanel4.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 208, 30));
+
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 250, 300));
 
         jScrollPane1.setBackground(new java.awt.Color(204, 255, 255));
         jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        jTable1.setBackground(new java.awt.Color(204, 255, 255));
-        jTable1.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        respTable.setBackground(new java.awt.Color(204, 255, 255));
+        respTable.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        respTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"Triangulo", null},
                 {"", null},
@@ -240,38 +273,54 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
                 return types [columnIndex];
             }
         });
-        jTable1.setGridColor(new java.awt.Color(0, 51, 51));
-        jTable1.setSelectionBackground(new java.awt.Color(0, 204, 204));
-        jTable1.setSelectionForeground(new java.awt.Color(0, 51, 51));
-        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
+        respTable.setGridColor(new java.awt.Color(0, 51, 51));
+        respTable.setSelectionBackground(new java.awt.Color(0, 204, 204));
+        respTable.setSelectionForeground(new java.awt.Color(0, 51, 51));
+        respTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(respTable);
+        if (respTable.getColumnModel().getColumnCount() > 0) {
+            respTable.getColumnModel().getColumn(0).setResizable(false);
+            respTable.getColumnModel().getColumn(1).setResizable(false);
         }
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 100, 430, 440));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 140, 430, 400));
 
-        jLabel3.setFont(new java.awt.Font("Calibri", 1, 16)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Calibri", 1, 36)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel3.setText("Respuestas encontradas");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 70, 350, -1));
+        jLabel3.setText("Respuestas...");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 80, 210, -1));
 
-        jToggleButton1.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
-        jToggleButton1.setForeground(new java.awt.Color(0, 102, 102));
-        jToggleButton1.setText("Reiniciar");
-        jPanel1.add(jToggleButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 550, 90, 30));
+        jButton3.setBackground(new java.awt.Color(204, 255, 255));
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/SystemExpert/ImgGUI/refresh.png"))); // NOI18N
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton3MouseClicked(evt);
+            }
+        });
+        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 550, -1, -1));
 
-        jToggleButton2.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
-        jToggleButton2.setForeground(new java.awt.Color(0, 102, 102));
-        jToggleButton2.setText("Cerrar");
-        jPanel1.add(jToggleButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 550, 90, 30));
+        jButton4.setBackground(new java.awt.Color(255, 204, 204));
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/SystemExpert/ImgGUI/power.png"))); // NOI18N
+        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton4MouseClicked(evt);
+            }
+        });
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 550, -1, -1));
+
+        informe.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        informe.setForeground(new java.awt.Color(0, 102, 102));
+        informe.setText("Informe de motor");
+        jPanel1.add(informe, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 154, -1));
+
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/SystemExpert/ImgGUI/geometry-cube.png"))); // NOI18N
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 70, 70, 60));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 751, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -282,23 +331,43 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-      
+
         String rutaArchivo = cargarNombreArchivo();
-        
-        if(rutaArchivo!=null){
-        
+
+        if (rutaArchivo != null) {
+
+            System.out.println("oee");
             try {
                 muestraContenido(rutaArchivo);
             } catch (IOException ex) {
                 System.out.println("Error en la carga del archivo");
-                      
+                this.fileUpload.setText("Falla en la carga!");
+
             }
-        }else{
+        } else {
             System.out.println("No existe la ruta");
         }
-        
-        
+
+
     }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+
+        int filas = modelo.getRowCount();
+        for (int i = 0; filas > i; i++) {
+            modelo.removeRow(0);
+        }
+        
+        this.numresp.setText("¿?");
+
+    //Poner en funcionamiento el motor
+        motor.solve();
+    }//GEN-LAST:event_jButton3MouseClicked
+
+    private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
+       this.setVisible(false);
+       this.dispose();
+    }//GEN-LAST:event_jButton4MouseClicked
 
     /**
      * @param args the command line arguments
@@ -360,7 +429,30 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
     }
 
     @Override
-    public void printFacts(List<IFact> paramList) {
+    public void printFacts(List<IFact> facts) {
+
+        String res = "";
+
+        Collections.sort(facts, (IFact f1, IFact f2) -> {
+            return Integer.compare(f2.getLevel(), f1.getLevel());
+        });
+
+        String data = "";
+        int cantResp = 0;
+
+        for (IFact f : facts) {
+            if (f.getLevel() != 0) {
+                res += f.toString() + "\n";
+
+                data = f.toString();
+                modelo.addRow(new Object[]{data, " "});
+                cantResp++;
+            }
+        }
+
+        numresp.setText("" + cantResp);
+
+       // System.out.println(res);
 
     }
 
@@ -371,19 +463,30 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField fileName;
+    private javax.swing.JLabel fileUpload;
+    private javax.swing.JLabel informe;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JToggleButton jToggleButton2;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JLabel numreglas;
+    private javax.swing.JLabel numresp;
+    private javax.swing.JTable respTable;
     // End of variables declaration//GEN-END:variables
 }
