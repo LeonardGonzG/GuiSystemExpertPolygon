@@ -138,6 +138,7 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jPanel3 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
@@ -161,6 +162,10 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
         jButton4 = new javax.swing.JButton();
         informe = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("GUI Sistema Experto");
@@ -176,6 +181,8 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Sistema experto - poligonos");
 
+        jLabel9.setText("Sistemas Inteligentes I, 2021-1");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -183,13 +190,17 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 190, Short.MAX_VALUE)
+                .addComponent(jLabel9)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -197,7 +208,7 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
 
         jSeparator1.setForeground(new java.awt.Color(0, 153, 255));
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
-        jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 60, 100, 490));
+        jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 60, 10, 490));
 
         jPanel3.setBackground(new java.awt.Color(204, 255, 255));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -225,6 +236,7 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
         jPanel3.add(jProgressBar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 90, 10));
 
         fileUpload.setFont(new java.awt.Font("Calibri", 0, 8)); // NOI18N
+        fileUpload.setText("0% completado");
         jPanel3.add(fileUpload, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 80, 50, 10));
 
         jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 250, 100));
@@ -280,7 +292,7 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
                 {null}
             },
             new String [] {
-                "Tipo de poligonos"
+                "TIPOS DE POLIGONOS"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -291,7 +303,8 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
                 return canEdit [columnIndex];
             }
         });
-        respTable.setGridColor(new java.awt.Color(0, 51, 51));
+        respTable.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        respTable.setGridColor(new java.awt.Color(0, 102, 102));
         respTable.setSelectionBackground(new java.awt.Color(0, 204, 204));
         respTable.setSelectionForeground(new java.awt.Color(0, 51, 51));
         respTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -310,7 +323,7 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
         jLabel3.setFont(new java.awt.Font("Calibri", 1, 36)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 102, 102));
         jLabel3.setText("Respuestas...");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 80, 210, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, 210, -1));
 
         jButton3.setBackground(new java.awt.Color(204, 255, 255));
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/SystemExpert/ImgGUI/refresh.png"))); // NOI18N
@@ -335,8 +348,28 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
         informe.setText("Informe de motor");
         jPanel1.add(informe, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 154, -1));
 
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/SystemExpert/ImgGUI/geometry-cube.png"))); // NOI18N
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 70, 70, 60));
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/SystemExpert/ImgGUI/target.png"))); // NOI18N
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 70, 40, 40));
+
+        jLabel8.setFont(new java.awt.Font("Calibri", 0, 10)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 0, 0));
+        jLabel8.setText("* Seleccione una fila para ver la imagen del poligono");
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 123, -1, 10));
+
+        jLabel10.setFont(new java.awt.Font("Calibri", 0, 11)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(0, 51, 255));
+        jLabel10.setText("Leonardo Gonzalez Gutierrez");
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 570, -1, -1));
+
+        jLabel11.setFont(new java.awt.Font("Calibri", 0, 11)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(0, 51, 255));
+        jLabel11.setText("David Fernando Clavijo Obando");
+        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 590, -1, -1));
+
+        jLabel12.setFont(new java.awt.Font("Calibri", 1, 11)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(0, 51, 255));
+        jLabel12.setText("Universidad de Caldas");
+        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 550, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -391,21 +424,18 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
         this.dispose();
     }//GEN-LAST:event_jButton4MouseClicked
 
-    
     ShowImage seeImg = new ShowImage();
     private void respTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_respTableMouseClicked
 
-        
         int index = respTable.getSelectedRow();
         TableModel model = respTable.getModel();
         String data = model.getValueAt(index, 0).toString();
-       
+
         seeImg.setVisible(true);
         seeImg.pack();
         seeImg.setLocationRelativeTo(null);
         seeImg.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
-       
+
         String nameImg = "";
         int cantResp = 0;
         int indice = 0;
@@ -415,14 +445,14 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
         nameImg = data.substring(0, indice).trim();
         rutaImg = contenedor.get(nameImg).toString();
 
-        String fullPath = "./ImgGUI/" + rutaImg+".png";
-         seeImg.setTitle(nameImg);
-         
+        String fullPath = "./ImgGUI/" + rutaImg + ".png";
+        seeImg.setTitle(nameImg);
+
         ImageIcon imageRow = new ImageIcon(getClass().getResource(fullPath));
         Image img = imageRow.getImage().getScaledInstance(seeImg.showLabel.getWidth(), seeImg.showLabel.getHeight(),
                 Image.SCALE_SMOOTH);
 
-        seeImg.showLabel.setIcon(new ImageIcon(img)); 
+        seeImg.showLabel.setIcon(new ImageIcon(img));
 
 
     }//GEN-LAST:event_respTableMouseClicked
@@ -497,7 +527,7 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
 
         String data = "";
         int cantResp = 0;
-        
+
         for (IFact f : facts) {
             if (f.getLevel() != 0) {
                 res += f.toString() + "\n";
@@ -509,8 +539,16 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
             }
         }
 
-        respTable.setModel(modelo);
-        respTable.setRowHeight(50);
+        if (cantResp > 0) {
+            JOptionPane.showConfirmDialog(null, "Encontramos unas posibles soluciones :)", "Hola!",
+                    JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
+
+            respTable.setModel(modelo);
+            respTable.setRowHeight(50);
+        } else {
+            JOptionPane.showConfirmDialog(null, "No encontramos nada :(", "Hola!",
+                    JOptionPane.CLOSED_OPTION, JOptionPane.WARNING_MESSAGE);
+        }
 
         numresp.setText("" + cantResp);
 
@@ -530,18 +568,23 @@ public class UserSystemPolygon extends javax.swing.JFrame implements HumanInterf
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JProgressBar jProgressBar1;
+    public javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
